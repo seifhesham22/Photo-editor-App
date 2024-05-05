@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="editxt">EDITOR</string>
+    <string name="cameratxt">CAMERA</string>
+    <string name="imagediscription">salam3alekooo</string>
+    <string name="choose_action">Choose action</string>
+    <string name="textview">TextView</string>
+    <string name="chooseaction">Choose Action</string>
+    <string name="button_1">Button 1</string>
+    <string name="button_2">Button 2</string>
+    <string name="button_3">Button 3</string>
+    <string name="button_4">Button 4</string>
+    <string name="button_5">Button 5</string>
+    <string name="button_6">Button 6</string>
+    <string name="button_7">Button 7</string>
+    <string name="image_rotation">Image rotation</string>
+    <string name="colour_filter">colour filter</string>
+    <string name="image_scaling">Image scaling</string>
+    <string name="vector_editor">Vector Editor</string>
+    <string name="retouching">Retouching</string>
+    <string name="unsharp_masking">Unsharp masking</string>
+    <string name="affine_transformations">Affine transform</string>
+    <string name="todo">TODO</string>
+</resources>
