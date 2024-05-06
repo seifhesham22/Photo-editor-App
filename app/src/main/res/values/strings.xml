@@ -22,4 +22,5 @@
     <string name="affine_transformations">Affine transform</string>
     <string name="todo">TODO</string>
     <string name="todo2">TODO</string>
+    <string name="enter_the_rotation_degree">Enter the rotation degree (max 360)</string>
 </resources>
