@@ -1,4 +1,3 @@
-// CameraActivity.kt
 package com.example.myapplication
 import android.Manifest
 import android.content.Intent

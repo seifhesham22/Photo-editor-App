@@ -33,6 +33,7 @@
         <!-- GalleryActivity -->
         <activity android:name=".GalleryActivity" />
         <activity android:name=".FunctionalitySelectionActivity"/>
+        <activity android:name=".RotateActivity"/>
 
 
     </application>
