@@ -3,6 +3,12 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    id ("kotlin-android")
+
+
+
+
 }
 
 android {
@@ -11,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.myapplication"
-        minSdk = 30
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
