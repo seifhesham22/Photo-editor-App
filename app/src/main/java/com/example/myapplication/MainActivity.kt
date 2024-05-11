@@ -28,6 +28,6 @@ class MainActivity : AppCompatActivity() {
     private fun showFunctionalitySelection() {
         // Inflate the functionality selection layout
         setContentView(R.layout.choose_action)
-        // Add functionality selection logic here
+
     }
 }
