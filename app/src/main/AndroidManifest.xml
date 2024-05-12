@@ -50,6 +50,7 @@
         <activity android:name=".RotateActivity"/>
         <activity android:name=".ColorFiltersActivity"/>
         <activity android:name=".ImageScalingActivity"/>
+        <activity android:name=".AffineTrans"/>
 
 
 
