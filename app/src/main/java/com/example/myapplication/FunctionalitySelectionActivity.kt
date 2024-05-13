@@ -21,7 +21,7 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
         val filtersButton = findViewById<View>(R.id.colour_filter)
         val scalingButton = findViewById<View>(R.id.Image_scaling)
         val retouchingButton = findViewById<View>(R.id.Affinetransformations)
-
+        val vectorButton = findViewById<View>(R.id.Vector_editor)
 
         rotationButton.setOnClickListener {
 
@@ -45,6 +45,10 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
+        vectorButton.setOnClickListener {
+            val intent = Intent(this, VectorEditorActivity::class.java)
+            intent.putExtra("photo_path" , photoPath)
+            startActivity(intent)
+        }
     }
 }

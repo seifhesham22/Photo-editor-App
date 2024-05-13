@@ -5,12 +5,14 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.myapplication.fileprovider"
@@ -37,23 +40,18 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- CameraActivity -->
-        <activity android:name=".CameraActivity" />
-
-        <!-- GalleryActivity -->
+        </activity> <!-- CameraActivity -->
+        <activity android:name=".CameraActivity" /> <!-- GalleryActivity -->
         <activity android:name=".GalleryActivity" />
-        <activity android:name=".FunctionalitySelectionActivity"/>
-        <activity android:name=".RotateActivity"/>
-        <activity android:name=".ColorFiltersActivity"/>
-        <activity android:name=".ImageScalingActivity"/>
-        <activity android:name=".AffineTrans"/>
-
-
-
+        <activity android:name=".FunctionalitySelectionActivity" />
+        <activity android:name=".RotateActivity" />
+        <activity android:name=".ColorFiltersActivity" />
+        <activity android:name=".ImageScalingActivity" />
+        <activity android:name=".AffineTrans" />
+        <activity android:name=".VectorEditorActivity"/>
     </application>
 
 </manifest>
