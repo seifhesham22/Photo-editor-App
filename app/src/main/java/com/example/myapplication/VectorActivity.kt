@@ -152,7 +152,7 @@ object CatmullRomSpline {
 
         return result
     }
-}
+} // m7
 
 
 
