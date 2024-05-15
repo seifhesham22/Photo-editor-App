@@ -46,24 +46,17 @@
         </activity> <!-- CameraActivity -->
         <activity android:name=".CameraActivity" /> <!-- GalleryActivity -->
         <activity android:name=".GalleryActivity" />
-<<<<<<< Updated upstream
+
         <activity android:name=".FunctionalitySelectionActivity" />
         <activity android:name=".RotateActivity" />
         <activity android:name=".ColorFiltersActivity" />
         <activity android:name=".ImageScalingActivity" />
         <activity android:name=".AffineTrans" />
         <activity android:name=".VectorEditorActivity"/>
-=======
-        <activity android:name=".FunctionalitySelectionActivity"/>
-        <activity android:name=".RotateActivity"/>
-        <activity android:name=".ColorFiltersActivity"/>
-        <activity android:name=".ImageScalingActivity"/>
-        <activity android:name=".AffineTrans"/>
         <activity android:name=".UnsharpActivity"/>
 
 
 
->>>>>>> Stashed changes
     </application>
 
 </manifest>
