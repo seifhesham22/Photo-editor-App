@@ -53,9 +53,7 @@
         <activity android:name=".ImageScalingActivity" />
         <activity android:name=".AffineTrans" />
         <activity android:name=".VectorEditorActivity"/>
-
         <activity android:name=".UnsharpActivity"/>
-
 
 
 

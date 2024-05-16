@@ -27,14 +27,13 @@ class VectorEditorActivity : AppCompatActivity() {
         }
     }
 
-    // Custom View for drawing broken lines and splines
     class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         private val pointPaint = Paint().apply {
-            color = Color.RED // Color for the touch points
-            style = Paint.Style.FILL // Filled circle
+            color = Color.RED
+            style = Paint.Style.FILL
         }
         private val pathPaint = Paint().apply {
-            color = Color.BLACK // Color for lines
+            color = Color.BLACK
             strokeWidth = 5f
             isAntiAlias = true
             style = Paint.Style.STROKE
@@ -47,25 +46,23 @@ class VectorEditorActivity : AppCompatActivity() {
 
         fun setPhotoBitmap(photoPath: String?) {
             photoBitmap = BitmapFactory.decodeFile(photoPath)
-            invalidate() // Refresh the view when the photo bitmap is set
+            invalidate()
         }
 
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
 
-            // Draw the background photo
             photoBitmap?.let {
-                // Draw the image at the top
                 val destRect = Rect(0, 0, canvas.width, it.height * canvas.width / it.width)
                 canvas.drawBitmap(it, null, destRect, null)
             }
 
-            // Draw the touch points
+            // Draw all the touch points as circles
             for (point in touchPoints) {
-                canvas.drawCircle(point.x, point.y, 10f, pointPaint) // Draw circles as touch points
+                canvas.drawCircle(point.x, point.y, 10f, pointPaint)
             }
 
-            // Draw the broken lines or splines based on touch points
+            // Draw either the spline or broken lines based on the flag
             if (isInterpolationEnabled) {
                 drawSpline(canvas)
             } else {
@@ -97,21 +94,27 @@ class VectorEditorActivity : AppCompatActivity() {
         }
 
         private fun drawSpline(canvas: Canvas) {
-            if (touchPoints.size >= 4) {
-                val splinePoints = CatmullRomSpline.calculateCurve(touchPoints.toTypedArray(), 0.5f, false)
-                for (i in 1 until splinePoints.size) {
-                    val startX = splinePoints[i - 1].x
-                    val startY = splinePoints[i - 1].y
-                    val endX = splinePoints[i].x
-                    val endY = splinePoints[i].y
-                    canvas.drawLine(startX, startY, endX, endY, pathPaint)
+            val path = Path()
+            if (touchPoints.size >= 2) {
+                val splinePoints = if (touchPoints.size == 2) {
+                    listOf(touchPoints[0], touchPoints[1])
+                } else {
+                    CatmullRomSpline.calculateCurve(touchPoints.toTypedArray(), 0.5f, false)
+                }
+
+                if (splinePoints.isNotEmpty()) {
+                    path.moveTo(splinePoints[0].x, splinePoints[0].y)
+                    for (i in 1 until splinePoints.size) {
+                        path.lineTo(splinePoints[i].x, splinePoints[i].y)
+                    }
+                    canvas.drawPath(path, pathPaint)
                 }
             }
         }
 
         fun toggleInterpolation() {
             isInterpolationEnabled = !isInterpolationEnabled
-            invalidate() // Redraw the view
+            invalidate()
         }
     }
 }
@@ -119,14 +122,19 @@ class VectorEditorActivity : AppCompatActivity() {
 object CatmullRomSpline {
     fun calculateCurve(controlPoints: Array<PointF>, alpha: Float, isClosed: Boolean): List<PointF> {
         val result = mutableListOf<PointF>()
-
         val n = controlPoints.size
-        if (n < 4) return emptyList() // Cannot create a spline with less than 4 points
+
+        if (n < 2) return emptyList() // Less than 2 points can't form a spline
 
         val increment = if (isClosed) 1 else 0
-        for (i in 0 until n - 3 + increment) {
+        for (i in 0 until n - 1 + increment) {
+            val p0 = controlPoints[if (i == 0) n - 1 else (i - 1) % n]
+            val p1 = controlPoints[i % n]
+            val p2 = controlPoints[(i + 1) % n]
+            val p3 = controlPoints[(i + 2) % n]
+
             for (t in 0..100) {
-                val t0 = t.toFloat() / 100
+                val t0 = t / 100f
                 val t1 = t0 * t0
                 val t2 = t1 * t0
 
@@ -134,11 +142,6 @@ object CatmullRomSpline {
                 val h10 = t2 - 2 * t1 + t0
                 val h01 = -2 * t2 + 3 * t1
                 val h11 = t2 - t1
-
-                val p0 = controlPoints[i]
-                val p1 = controlPoints[i + 1]
-                val p2 = controlPoints[i + 2]
-                val p3 = controlPoints[i + 3]
 
                 val px = 0.5f * ((2 * p1.x) + (-p0.x + p2.x) * t0 + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t1 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t2)
                 val py = 0.5f * ((2 * p1.y) + (-p0.y + p2.y) * t0 + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t1 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t2)
@@ -149,4 +152,8 @@ object CatmullRomSpline {
 
         return result
     }
-}
+} // m7
+
+
+
+
