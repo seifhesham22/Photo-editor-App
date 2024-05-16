@@ -2,7 +2,14 @@ package com.example.myapplication
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PointF
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -49,11 +56,12 @@ class VectorEditorActivity : AppCompatActivity() {
             invalidate()
         }
 
+        @SuppressLint("DrawAllocation")
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
 
             photoBitmap?.let {
-                val destRect = Rect(0, 0, canvas.width, it.height * canvas.width / it.width)
+                val destRect = Rect(0, 0, width, it.height * width / it.width)
                 canvas.drawBitmap(it, null, destRect, null)
             }
 
