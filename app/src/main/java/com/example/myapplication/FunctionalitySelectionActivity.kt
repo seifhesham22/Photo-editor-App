@@ -18,14 +18,14 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
         val filtersButton = findViewById<View>(R.id.colour_filter)
         val scalingButton = findViewById<View>(R.id.Image_scaling)
         val retouchingButton = findViewById<View>(R.id.Affinetransformations)
-<<<<<<< Updated upstream
+
         val vectorButton = findViewById<View>(R.id.Vector_editor)
 
-=======
+
         val unsharpButton = findViewById<View>(R.id.Unsharp_masking)
 
         // Set click listeners for the buttons
->>>>>>> Stashed changes
+
         rotationButton.setOnClickListener {
             val intent = Intent(this, RotateActivity::class.java)
             intent.putExtra("photo_path", photoPath)
@@ -50,15 +50,16 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-<<<<<<< Updated upstream
+
         vectorButton.setOnClickListener {
             val intent = Intent(this, VectorEditorActivity::class.java)
-            intent.putExtra("photo_path" , photoPath)
-=======
+            intent.putExtra("photo_path", photoPath)
+        }
+
         unsharpButton.setOnClickListener {
             val intent = Intent(this, UnsharpActivity::class.java)
             intent.putExtra("photo_path", photoPath)
->>>>>>> Stashed changes
+
             startActivity(intent)
         }
     }

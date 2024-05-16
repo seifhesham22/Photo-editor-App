@@ -35,11 +35,11 @@
     <string name="enter_x_scale">Enter X Scale</string>
     <string name="resize">Resize</string>
     <string name="enter_y_scale">Enter Y Scale</string>
-<<<<<<< Updated upstream
+
     <string name="title_activity_vector">VectorActivity</string>
     <string name="toggle_interpolation">Toggle Interpolation</string>
-=======
+
     <string name="apply_mask">Apply Mask</string>
->>>>>>> Stashed changes
+
 
 </resources>
