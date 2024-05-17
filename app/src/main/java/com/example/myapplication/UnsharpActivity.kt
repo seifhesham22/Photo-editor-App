@@ -5,104 +5,148 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 class UnsharpActivity : AppCompatActivity() {
 
-    private lateinit var originalBitmap: Bitmap
     private lateinit var imageView: ImageView
+    private lateinit var photoPath: String
+    private lateinit var ratioEditText: EditText
+    private lateinit var applyButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.unsharp_mask)
 
-        val photoPath = intent.getStringExtra("photo_path")
-        originalBitmap = BitmapFactory.decodeFile(photoPath)
+        imageView = findViewById(R.id.imageView)
+        ratioEditText = findViewById(R.id.ratioEditText)
+        applyButton = findViewById(R.id.applyButton)
 
-        imageView = findViewById(R.id.view20)
-        imageView.setImageBitmap(originalBitmap)
+        // Get the photo path from the intent
+        val extras = intent.extras
+        if (extras != null) {
+            photoPath = extras.getString("photo_path").toString()
+            if (photoPath.isNotEmpty()) {
+                val originalBitmap = BitmapFactory.decodeFile(photoPath)
+                imageView.setImageBitmap(originalBitmap)
 
-        val applyUnsharpButton: Button = findViewById(R.id.button10)
-        applyUnsharpButton.setOnClickListener {
-            applyUnsharpMasking()
+                applyButton.setOnClickListener {
+                    val ratio = ratioEditText.text.toString().toFloatOrNull() ?: 0f
+                    val sharpenedBitmap = applyUnsharpMask(originalBitmap, ratio)
+                    imageView.setImageBitmap(sharpenedBitmap)
+                }
+            }
         }
     }
 
-    private fun applyUnsharpMasking() {
-        // Define unsharp masking parameters
-        val radius = 5
-        val amount = 0.5
+    private fun applyUnsharpMask(original: Bitmap, ratio: Float): Bitmap {
+        // Convert to grayscale
+        val grayscaleBitmap = toGrayscale(original)
 
-        // Apply unsharp masking
-        val sharpenedBitmap = unsharpMask(originalBitmap, radius, amount)
+        // Apply Gaussian blur
+        val blurredBitmap = applyGaussianBlur(grayscaleBitmap)
 
-        // Display sharpened image
-        imageView.setImageBitmap(sharpenedBitmap)
+        // Subtract blurred image from original and adjust ratio
+        val sharpenedBitmap = subtractImages(grayscaleBitmap, blurredBitmap, ratio)
+
+        return sharpenedBitmap
     }
 
-    private fun unsharpMask(bitmap: Bitmap, radius: Int, amount: Double): Bitmap {
-        // Convert bitmap to mutable bitmap for editing
-        val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+    private fun toGrayscale(bmpOriginal: Bitmap): Bitmap {
+        val width = bmpOriginal.width
+        val height = bmpOriginal.height
 
-        // Apply unsharp masking algorithm
-        val unsharpMaskedPixels = IntArray(mutableBitmap.width * mutableBitmap.height)
-        mutableBitmap.getPixels(unsharpMaskedPixels, 0, mutableBitmap.width, 0, 0, mutableBitmap.width, mutableBitmap.height)
-
-        for (i in unsharpMaskedPixels.indices) {
-            val pixelValue = unsharpMaskedPixels[i]
-            val r = Color.red(pixelValue)
-            val g = Color.green(pixelValue)
-            val b = Color.blue(pixelValue)
-
-            val blurredPixelValue = applyGaussianBlur(unsharpMaskedPixels, i, mutableBitmap.width, mutableBitmap.height, radius)
-
-            val newR = (r + (r - Color.red(blurredPixelValue)) * amount).toInt().coerceIn(0, 255)
-            val newG = (g + (g - Color.green(blurredPixelValue)) * amount).toInt().coerceIn(0, 255)
-            val newB = (b + (b - Color.blue(blurredPixelValue)) * amount).toInt().coerceIn(0, 255)
-
-            unsharpMaskedPixels[i] = Color.rgb(newR, newG, newB)
-        }
-
-        mutableBitmap.setPixels(unsharpMaskedPixels, 0, mutableBitmap.width, 0, 0, mutableBitmap.width, mutableBitmap.height)
-
-        return mutableBitmap
+        val bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        val canvas = android.graphics.Canvas(bmpGrayscale)
+        val paint = android.graphics.Paint()
+        val cm = android.graphics.ColorMatrix()
+        cm.setSaturation(0f)
+        val f = android.graphics.ColorMatrixColorFilter(cm)
+        paint.colorFilter = f
+        canvas.drawBitmap(bmpOriginal, 0f, 0f, paint)
+        return bmpGrayscale
     }
 
-    private fun applyGaussianBlur(pixels: IntArray, index: Int, width: Int, height: Int, radius: Int): Int {
-        val r = radius.coerceAtLeast(1)
-        val diameter = 2 * r + 1
-        val matrix = DoubleArray(diameter)
+    private fun applyGaussianBlur(bitmap: Bitmap): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val resultBitmap = Bitmap.createBitmap(width, height, bitmap.config)
 
-        // Create Gaussian kernel
-        val sigma = radius / 3.0
-        var sigmaSquare = 2 * sigma * sigma
-        var total = 0.0
-        for (i in -r..r) {
-            val distance = i * i
-            matrix[i + r] = Math.exp(-distance / sigmaSquare) / (Math.PI * sigmaSquare)
-            total += matrix[i + r]
-        }
+        val radius = 1 // Gaussian blur radius
 
-        // Normalize the kernel
-        for (i in matrix.indices) {
-            matrix[i] /= total
-        }
+        // Gaussian kernel
+        val kernel = arrayOf(
+            floatArrayOf(1f, 2f, 1f),
+            floatArrayOf(2f, 4f, 2f),
+            floatArrayOf(1f, 2f, 1f)
+        )
 
-        var red = 0
-        var green = 0
-        var blue = 0
+        for (x in radius until width - radius) {
+            for (y in radius until height - radius) {
+                var sumRed = 0f
+                var sumGreen = 0f
+                var sumBlue = 0f
+                var sumAlpha = 0f
 
-        for (y in -r..r) {
-            for (x in -r..r) {
-                val pixelIndex = (index % width + x).coerceIn(0, width - 1) + (index / width + y).coerceIn(0, height - 1) * width
-                val weight = matrix[y + r] * matrix[x + r]
-                red += Color.red(pixels[pixelIndex]) * weight.toInt()
-                green += Color.green(pixels[pixelIndex]) * weight.toInt()
-                blue += Color.blue(pixels[pixelIndex]) * weight.toInt()
+                for (i in -radius..radius) {
+                    for (j in -radius..radius) {
+                        val pixel = bitmap.getPixel(x + i, y + j)
+                        val weight = kernel[i + radius][j + radius]
+                        sumRed += Color.red(pixel) * weight
+                        sumGreen += Color.green(pixel) * weight
+                        sumBlue += Color.blue(pixel) * weight
+                        sumAlpha += Color.alpha(pixel) * weight
+                    }
+                }
+
+                val newPixel = Color.argb(
+                    sumAlpha.toInt(),
+                    sumRed.toInt() / 16,
+                    sumGreen.toInt() / 16,
+                    sumBlue.toInt() / 16
+                )
+
+                resultBitmap.setPixel(x, y, newPixel)
             }
         }
 
-        return Color.rgb(red.coerceIn(0, 255), green.coerceIn(0, 255), blue.coerceIn(0, 255))
+        return resultBitmap
     }
+    private fun subtractImages(original: Bitmap, blurred: Bitmap, ratio: Float): Bitmap {
+        val width = original.width
+        val height = original.height
+        val resultBitmap = Bitmap.createBitmap(width, height, original.config)
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val originalPixel = original.getPixel(x, y)
+                val blurredPixel = blurred.getPixel(x, y)
+
+                val redDiff = Color.red(originalPixel) - Color.red(blurredPixel)
+                val greenDiff = Color.green(originalPixel) - Color.green(blurredPixel)
+                val blueDiff = Color.blue(originalPixel) - Color.blue(blurredPixel)
+
+                val adjustedRed = Color.red(originalPixel) + (redDiff * ratio).toInt()
+                val adjustedGreen = Color.green(originalPixel) + (greenDiff * ratio).toInt()
+                val adjustedBlue = Color.blue(originalPixel) + (blueDiff * ratio).toInt()
+
+                val finalPixel = Color.rgb(
+                    clamp(adjustedRed),
+                    clamp(adjustedGreen),
+                    clamp(adjustedBlue)
+                )
+
+                resultBitmap.setPixel(x, y, finalPixel)
+            }
+        }
+
+        return resultBitmap
+    }
+
+    private fun clamp(value: Int): Int {
+        return if (value < 0) 0 else if (value > 255) 255 else value
+    }
+
 }
