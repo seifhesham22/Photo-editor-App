@@ -1,8 +1,6 @@
 package com.example.myapplication
 
-import android.Manifest
 import android.content.ContentValues
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -13,8 +11,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,10 +26,6 @@ class RotateActivity : AppCompatActivity() {
     private lateinit var originalBitmap: Bitmap
     private var rotatedBitmap: Bitmap? = null
     private lateinit var imageView: ImageView
-
-    companion object {
-        private const val REQUEST_WRITE_PERMISSION = 100
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +50,7 @@ class RotateActivity : AppCompatActivity() {
 
         buttonSave.setOnClickListener {
             rotatedBitmap?.let { bitmap ->
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_WRITE_PERMISSION)
-                } else {
-                    saveBitmapToGallery(bitmap)
-                }
+                saveBitmapToGallery(bitmap)
             } ?: Toast.makeText(this, "No image to save", Toast.LENGTH_SHORT).show()
         }
     }
@@ -118,48 +106,28 @@ class RotateActivity : AppCompatActivity() {
     }
 
     private fun saveBitmapToGallery(bitmap: Bitmap) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_WRITE_PERMISSION)
-        } else {
-            saveImage(bitmap)
-        }
-    }
-
-    private fun saveImage(bitmap: Bitmap) {
-        val values = ContentValues().apply {
+        val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "Rotated_Image_${System.currentTimeMillis()}.jpg")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-            put(MediaStore.Images.Media.RELATIVE_PATH, "DIM/RotatedImages")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/RotatedImages")
         }
 
-        val uri: Uri? = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-        try {
-            contentResolver.openOutputStream(uri!!)?.use { outStream ->
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
-                Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+        val uri: Uri? = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        uri?.let {
+            try {
+                contentResolver.openOutputStream(it)?.use { outStream ->
+                    if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)) {
+                        Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+        } ?: run {
+            Toast.makeText(this, "Failed to create new MediaStore record", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_WRITE_PERMISSION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, now save the image
-                rotatedBitmap?.let { saveImage(it) }
-            } else {
-                // Permission denied, show a message to the user
-                Toast.makeText(this, "Write permission denied. Cannot save image.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-
 }
-
