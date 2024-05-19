@@ -114,7 +114,6 @@ class UnsharpActivity : AppCompatActivity() {
 
         return resultBitmap
     }
-
     private fun subtractImages(original: Bitmap, blurred: Bitmap, ratio: Float): Bitmap {
         val width = original.width
         val height = original.height
