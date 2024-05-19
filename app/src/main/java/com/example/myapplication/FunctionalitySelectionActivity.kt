@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -19,8 +20,8 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
         val scalingButton = findViewById<View>(R.id.Image_scaling)
         val retouchingButton = findViewById<View>(R.id.Affinetransformations)
         val vectorButton = findViewById<View>(R.id.Vector_editor)
-
         val unsharpButton = findViewById<View>(R.id.Unsharp_masking)
+        val backToMainButton = findViewById<View>(R.id.backtomain)
 
         // Set click listeners for the buttons
         rotationButton.setOnClickListener {
@@ -43,7 +44,7 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
 
         retouchingButton.setOnClickListener {
             val intent = Intent(this, AffineTrans::class.java)
-            intent.putExtra("photo_path" , photoPath)
+            intent.putExtra("photo_path", photoPath)
             startActivity(intent)
         }
 
@@ -52,9 +53,16 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
             intent.putExtra("photo_path", photoPath)
             startActivity(intent)
         }
+
         unsharpButton.setOnClickListener {
             val intent = Intent(this, UnsharpActivity::class.java)
             intent.putExtra("photo_path", photoPath)
+            startActivity(intent)
+        }
+
+
+        backToMainButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }

@@ -1,50 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="16dp">
 
-    <!-- ImageView to display the original and scaled images -->
     <ImageView
-        android:id="@+id/scaleview"
-        android:layout_width="348dp"
-        android:layout_height="275dp"
+        android:id="@+id/photoImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/uikyghjf"
+        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:contentDescription="TODO"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toTopOf="@id/scaleInput"
-        app:layout_constraintDimensionRatio="h,1:1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/resizeXScaleEditText"
+        app:layout_constraintDimensionRatio="H,1:1" />
 
     <EditText
-        android:id="@+id/scaleInput"
+        android:id="@+id/resizeXScaleEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Enter scale ratio"
+        android:autofillHints=""
+        android:hint="@string/enter_x_scale"
         android:inputType="numberDecimal"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:maxLength="5"
+        app:layout_constraintTop_toBottomOf="@+id/photoImageView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scaleview"
-        android:autofillHints="" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
 
-    <!-- Button to trigger image scaling -->
+    <EditText
+        android:id="@+id/resizeYScaleEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:hint="@string/enter_y_scale"
+        android:inputType="numberDecimal"
+        android:maxLength="5"
+        app:layout_constraintTop_toBottomOf="@+id/resizeXScaleEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
+
     <Button
-        android:id="@+id/buttonScale"
+        android:id="@+id/resizeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Scale Image"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/resize"
+        app:layout_constraintTop_toBottomOf="@+id/resizeYScaleEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scaleInput" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

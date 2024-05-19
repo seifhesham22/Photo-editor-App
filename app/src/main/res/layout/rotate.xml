@@ -3,41 +3,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="303dp"
-        android:layout_height="336dp"
-        android:layout_marginBottom="352dp"
+        android:layout_width="396dp"
+        android:layout_height="332dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="42dp"
         android:contentDescription="@string/todo2"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/editText_numbers"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editText_numbers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="307dp"
+        android:layout_width="206dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="102dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="103dp"
+        android:layout_marginBottom="16dp"
         android:autofillHints=""
-        android:background="#d0d0d0"
+        android:background="#ffff"
+        android:freezesText="false"
         android:hint="@string/enter_the_rotation_degree"
         android:inputType="number"
         android:max="360"
-
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_rotate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+    <Button
+        android:id="@+id/button_rotate"
+        android:layout_width="128dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="#6E4FCC"
+        android:text="Rotate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_numbers" />
 
-
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="128dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="#6E4FCC"
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_rotate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
