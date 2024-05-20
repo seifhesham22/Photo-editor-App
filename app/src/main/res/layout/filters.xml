@@ -7,8 +7,12 @@
 
     <ImageView
         android:id="@+id/View2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="396dp"
+        android:layout_height="332dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="109dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="80dp"
         android:contentDescription="@string/kk"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/grayscaleButton"
@@ -18,38 +22,94 @@
 
     <Button
         android:id="@+id/grayscaleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_width="103dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:background="@drawable/editor"
+        android:textColor="@color/white"
+        android:backgroundTint="#6E4FCC"
         android:text="@string/gray"
-        app:layout_constraintBottom_toTopOf="@+id/sepiaButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/View2" />
 
     <Button
         android:id="@+id/sepiaButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="103dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="35dp"
+        android:background="@drawable/editor"
+        android:textColor="@color/white"
+        android:backgroundTint="#6E4FCC"
         android:text="@string/speia"
-        app:layout_constraintBottom_toTopOf="@+id/invertButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/grayscaleButton"
+        app:layout_constraintStart_toEndOf="@+id/invertButton"
+        app:layout_constraintTop_toBottomOf="@+id/View2" />
 
     <Button
         android:id="@+id/invertButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="103dp"
+        android:layout_height="27dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="#6E4FCC"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/white"
         android:text="@string/invert"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/View2" />
+
+    <Button
+        android:id="@+id/savebutton"
+        android:layout_width="103dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="154dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/white"
+        android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sepiaButton" />
+
+    <Button
+        android:id="@+id/brightnessButton"
+        android:layout_width="103dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="36dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="#6E4FCC"
+        android:fontFamily="sans-serif-medium"
+        android:text="Brightness"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/savebutton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invertButton" />
+
+    <Button
+        android:id="@+id/contrastButton"
+        android:layout_width="103dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="#6E4FCC"
+        android:fontFamily="sans-serif-medium"
+        android:text="contrast"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/savebutton"
+        app:layout_constraintTop_toBottomOf="@+id/grayscaleButton" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

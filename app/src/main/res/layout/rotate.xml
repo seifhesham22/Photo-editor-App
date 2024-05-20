@@ -47,7 +47,8 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/editor"
         android:backgroundTint="#6E4FCC"
-        android:text="Rotate"
+        android:textColor="@color/white"
+        android:text="@string/rotate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_numbers" />
@@ -58,8 +59,9 @@
         android:layout_height="28dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/editor"
-        android:backgroundTint="#6E4FCC"
-        android:text="Save"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:textColor="@color/white"
+        android:text="@string/save2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_rotate" />

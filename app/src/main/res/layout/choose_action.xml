@@ -23,7 +23,7 @@
         android:layout_marginEnd="45dp"
         android:layout_marginBottom="11dp"
         android:background="@drawable/editor"
-        android:backgroundTint="#E8DBDB"
+        android:backgroundTint="#ffffff"
         android:drawableEnd="@drawable/image_rotate_svgrepo_com"
         android:padding="10dp"
         android:text="@string/image_rotation"

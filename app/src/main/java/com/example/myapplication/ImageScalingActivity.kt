@@ -1,41 +1,54 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class ImageScalingActivity : AppCompatActivity() {
+
+    private lateinit var imgView: ImageView
+    private lateinit var srcBitmap: Bitmap
+    private var resizedBitmap: Bitmap? = null
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.image_scaling)
 
-        val imgView: ImageView = findViewById(R.id.photoImageView)
+        imgView = findViewById(R.id.photoImageView)
         val scaleXEditText: EditText = findViewById(R.id.resizeXScaleEditText)
         val scaleYEditText: EditText = findViewById(R.id.resizeYScaleEditText)
         val resizeBtn: Button = findViewById(R.id.resizeButton)
+        val saveBtn: Button = findViewById(R.id.save)
 
         val imgPath = intent.getStringExtra("photo_path")
 
         if (imgPath != null) {
-            val srcBitmap = BitmapFactory.decodeFile(imgPath)
-
+            srcBitmap = BitmapFactory.decodeFile(imgPath)
             imgView.setImageBitmap(srcBitmap)
 
             resizeBtn.setOnClickListener {
                 val scaleX = scaleXEditText.text.toString().toDoubleOrNull() ?: 1.0
                 val scaleY = scaleYEditText.text.toString().toDoubleOrNull() ?: 1.0
 
-                val resizedBitmap = resize(srcBitmap, scaleX, scaleY)
-
+                resizedBitmap = resize(srcBitmap, scaleX, scaleY)
                 imgView.setImageBitmap(resizedBitmap)
+            }
+
+            saveBtn.setOnClickListener {
+                resizedBitmap?.let { bitmap ->
+                    saveBitmapToGallery(bitmap)
+                } ?: Toast.makeText(this, "No image to save", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -91,12 +104,10 @@ class ImageScalingActivity : AppCompatActivity() {
         newWidth: Int,
         newHeight: Int
     ): Bitmap {
-        val resizedBitmap =
-            Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
+        val resizedBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
 
         for (y in 0 until newHeight) {
             for (x in 0 until newWidth) {
-
                 val originalX = x / scaleX
                 val originalY = y / scaleY
                 val x0 = originalX.toInt().coerceIn(0, srcBitmap.width - 1)
@@ -127,5 +138,31 @@ class ImageScalingActivity : AppCompatActivity() {
         val newG = Color.green(px1) * (1 - coef) + Color.green(px2) * coef
         val newB = Color.blue(px1) * (1 - coef) + Color.blue(px2) * coef
         return (255 shl 24) or (newR.toInt() shl 16) or (newG.toInt() shl 8) or newB.toInt()
+    }
+
+    private fun saveBitmapToGallery(bitmap: Bitmap) {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "Scaled_Image_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ScaledImages")
+        }
+
+        val uri: Uri? = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        uri?.let {
+            try {
+                contentResolver.openOutputStream(it)?.use { outStream ->
+                    if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)) {
+                        Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+            }
+        } ?: run {
+            Toast.makeText(this, "Failed to create new MediaStore record", Toast.LENGTH_SHORT).show()
+        }
     }
 }
