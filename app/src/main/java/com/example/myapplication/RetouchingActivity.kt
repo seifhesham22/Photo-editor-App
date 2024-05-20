@@ -1,16 +1,18 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.MotionEvent
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.RetouchingBinding
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -62,7 +64,7 @@ class RetouchingActivity : AppCompatActivity() {
 
         // Button click listener to save the retouched image
         binding.saveButton.setOnClickListener {
-            saveBitmapToFile(retouchedBitmap)
+            saveBitmapToGallery(retouchedBitmap)
         }
     }
 
@@ -138,18 +140,30 @@ class RetouchingActivity : AppCompatActivity() {
         return Color.rgb(averageRed, averageGreen, averageBlue)
     }
 
-    private fun saveBitmapToFile(bitmap: Bitmap) {
-        val filePhoto = ""
-        try {
-            val file = File(filePhoto)
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            outputStream.flush()
-            outputStream.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
+    private fun saveBitmapToGallery(bitmap: Bitmap) {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "Retouched_Image_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/RetouchedImages")
+        }
+
+        val uri: Uri? = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        uri?.let {
+            try {
+                contentResolver.openOutputStream(it)?.use { outStream ->
+                    if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)) {
+                        Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+            }
+        } ?: run {
+            Toast.makeText(this, "Failed to create new MediaStore record", Toast.LENGTH_SHORT).show()
         }
     }
 }
-
 

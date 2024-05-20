@@ -45,6 +45,9 @@
     <string name="save2">Save</string>
     <string name="finish_retouching">Finish Retouching</string>
     <string name="start_retouching">Start Retouching</string>
+    <string name="Start_Retouching">Start Retouching</string>
+    <string name="save_retouched_image">Save Retouched Image</string>
+    <string name="save_image">Save Image</string>
 
 
 </resources>

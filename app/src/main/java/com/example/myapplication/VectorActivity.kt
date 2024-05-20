@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,15 +11,19 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class VectorEditorActivity : AppCompatActivity() {
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.vector)
@@ -31,6 +36,11 @@ class VectorEditorActivity : AppCompatActivity() {
         val interpolationButton = findViewById<Button>(R.id.interpolationButton)
         interpolationButton.setOnClickListener {
             drawingView.toggleInterpolation()
+        }
+
+        val saveButton = findViewById<Button>(R.id.saveButton)
+        saveButton.setOnClickListener {
+            drawingView.saveBitmapToGallery()
         }
     }
 
@@ -123,6 +133,40 @@ class VectorEditorActivity : AppCompatActivity() {
         fun toggleInterpolation() {
             isInterpolationEnabled = !isInterpolationEnabled
             invalidate()
+        }
+
+        fun saveBitmapToGallery() {
+            val bitmap = createBitmapFromView(this)
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, "Vector_Image_${System.currentTimeMillis()}.jpg")
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/VectorImages")
+            }
+
+            val uri: Uri? = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            uri?.let {
+                try {
+                    context.contentResolver.openOutputStream(it)?.use { outStream ->
+                        if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)) {
+                            Toast.makeText(context, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Failed to save image", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "Failed to save image", Toast.LENGTH_SHORT).show()
+                }
+            } ?: run {
+                Toast.makeText(context, "Failed to create new MediaStore record", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        private fun createBitmapFromView(view: View): Bitmap {
+            val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            view.draw(canvas)
+            return bitmap
         }
     }
 }
