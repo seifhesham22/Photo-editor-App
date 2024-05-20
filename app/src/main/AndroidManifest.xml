@@ -54,7 +54,7 @@
         <activity android:name=".AffineTrans" />
         <activity android:name=".VectorEditorActivity"/>
         <activity android:name=".UnsharpActivity"/>
-
+         <activity android:name=".RetouchingActivity"/>
 
 
     </application>

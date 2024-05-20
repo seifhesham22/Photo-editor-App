@@ -40,9 +40,8 @@
     <string name="toggle_interpolation">Toggle Interpolation</string>
 
     <string name="apply_mask">Apply Mask</string>
-    <string name="save">Save</string>
-    <string name="rotate">Rotate</string>
-    <string name="save2">Save</string>
+    <string name="finish_retouching">Finish Retouching</string>
+    <string name="start_retouching">Start Retouching</string>
 
 
 </resources>

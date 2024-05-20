@@ -22,6 +22,7 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
         val vectorButton = findViewById<View>(R.id.Vector_editor)
         val unsharpButton = findViewById<View>(R.id.Unsharp_masking)
         val backToMainButton = findViewById<View>(R.id.backtomain)
+        val retouchButton = findViewById<View>(R.id.Retouching)
 
         // Set click listeners for the buttons
         rotationButton.setOnClickListener {
@@ -56,6 +57,11 @@ class FunctionalitySelectionActivity : AppCompatActivity() {
 
         unsharpButton.setOnClickListener {
             val intent = Intent(this, UnsharpActivity::class.java)
+            intent.putExtra("photo_path", photoPath)
+            startActivity(intent)
+        }
+        retouchButton.setOnClickListener {
+            val intent = Intent(this, RetouchingActivity::class.java)
             intent.putExtra("photo_path", photoPath)
             startActivity(intent)
         }
