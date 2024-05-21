@@ -6,39 +6,49 @@
     android:layout_height="match_parent">
 
     <!-- Custom View for drawing -->
-    <view
-        class="com.example.myapplication.VectorEditorActivity$DrawingView"
-        android:id="@+id/drawingView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/interpolationButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingClass"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"/>
 
     <!-- Button to toggle interpolation -->
+
+    <!-- Button to save the image -->
+
+    <view
+        android:id="@+id/drawingView"
+        class="com.example.myapplication.VectorEditorActivity$DrawingView"
+        android:layout_width="389dp"
+        android:layout_height="494dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@id/interpolationButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.391"
+        tools:ignore="MissingClass" />
+
     <Button
         android:id="@+id/interpolationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="#6E4FCC"
         android:text="Toggle Interpolation"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-    <!-- Button to save the image -->
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="44dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="@string/save_image"
-        app:layout_constraintBottom_toTopOf="@id/interpolationButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
