@@ -22,6 +22,7 @@
         android:id="@+id/resizeXScaleEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:hint="@string/enter_x_scale"
         android:inputType="numberDecimal"
         android:maxLength="5"
@@ -35,6 +36,7 @@
         android:id="@+id/resizeYScaleEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:hint="@string/enter_y_scale"
         android:inputType="numberDecimal"
         android:maxLength="5"
@@ -45,11 +47,35 @@
 
     <Button
         android:id="@+id/resizeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="103dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="154dp"
         android:text="@string/resize"
+        android:backgroundTint="#0077CC"
+        android:background="@drawable/editor"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/resizeYScaleEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/savebutton"
+        android:layout_width="103dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="154dp"
+        android:background="@drawable/editor"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/save"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resizeButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

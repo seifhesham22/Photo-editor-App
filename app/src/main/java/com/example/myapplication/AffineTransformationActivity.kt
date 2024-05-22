@@ -1,12 +1,15 @@
 package com.example.myapplication
 
+import android.content.ContentValues
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PointF
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -69,10 +72,12 @@ class AffineTrans : AppCompatActivity() {
         }
     }
 
+    private lateinit var transformedBitmap: Bitmap
+
     private fun applyAffineTransformation(bitmap: Bitmap) {
         val matrix = calculateAffineTransformMatrix(originalPoints, destinationPoints)
 
-        val transformedBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config)
+        transformedBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config)
         val canvas = Canvas(transformedBitmap)
         val paint = Paint().apply {
             isFilterBitmap = true
@@ -87,6 +92,7 @@ class AffineTrans : AppCompatActivity() {
             Toast.makeText(this, "Transformation failed. Please try again.", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun calculateAffineTransformMatrix(originalPoints: List<PointF>, destinationPoints: List<PointF>): Matrix {
         val src = floatArrayOf(
@@ -120,4 +126,32 @@ class AffineTrans : AppCompatActivity() {
             Toast.makeText(this, "Invalid scale values. Please enter valid numbers.", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun saveBitmapToGallery(bitmap: Bitmap) {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "Filtered_Image_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/FilteredImages")
+        }
+
+        val uri: Uri? = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        uri?.let {
+            try {
+                contentResolver.openOutputStream(it)?.use { outStream ->
+                    if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)) {
+                        Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+            }
+        } ?: run {
+            Toast.makeText(this, "Failed to create new MediaStore record", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 }
